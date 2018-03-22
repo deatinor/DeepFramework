@@ -1,0 +1,9 @@
+.ipynb*
+*.swp
+*.swo
+__pycac*
+*.txt
+
+*.pdf
+!dlc-miniproject-1*
+
