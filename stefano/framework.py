@@ -1,15 +1,6 @@
-import matplotlib.pyplot as plt
-from matplotlib import colors
-
 import torch
 from torch import FloatTensor, LongTensor
 import math
-
-'Dataset plotting function'
-def plot_output(train, all_output, permutation):
-    plt.figure(figsize=(3,3))
-    plt.scatter(train[permutation][:,0], train[permutation][:,1], c = all_output)
-
 
 class Module():
     '''General class structure from which to inherit'''
@@ -30,6 +21,7 @@ class Linear(Module):
     '''Linear layer implementation, needs the number of inputs and number of units to call an instance.
     It initializes Gaussian weights with mean = 0 and std = 0.1.
     Bias terms are included in the weights matrix.'''
+
     def __init__(self, input_dimension, output_dimension):
         super(Linear,self).__init__()
         
@@ -42,10 +34,11 @@ class Linear(Module):
     
     def forward(self, input):
         
-        # Append '1' to input to be multiplied to bias term
         self._input = input.view(-1, self._input_dimension)
-        self._batch_size = self._input.shape[0]
+
+        # Append '1' to input to be multiplied to bias term
         self._input = torch.cat((self._input, torch.Tensor(self._input.shape[0]).fill_(1)), dim=1)
+
         self._output = self._input.mm(self._weights.t())
         
         return self._output.clone()
@@ -53,7 +46,7 @@ class Linear(Module):
     def backward(self, d_dy):
         self._gradient.add_(d_dy.t().mm(self._input))
         
-        # Narrowing is done to exclude bias terms in backprop.
+        # Narrowing is done to exclude bias terms in backprop
         d_dx = d_dy.mm(self._weights.narrow(1, 0, self._input_dimension))
         
         return d_dx
@@ -108,6 +101,7 @@ class LossMSE(Module):
         '''Returns square error between input and target.'''
         self._input = input - target
         self._output = (self._input).pow(2).sum()
+
         return self._output
         
     def backward(self):
@@ -188,9 +182,23 @@ def compute_error(network, dataset, target, data_type='Train'):
     boolean_target = target[:,1] > target[:,0]
     boolean_output = output[:,1] > output[:,0]
 
+    # Count number of correct predictions
     correct += sum(boolean_output == boolean_target)
 
     correct = (1000-correct)/1000 * 100
     print(data_type + ' error: {} %'.format(correct))
 
     return correct
+
+
+###################################################################################
+
+'Other functions'
+
+import matplotlib.pyplot as plt
+from matplotlib import colors
+
+'Dataset plotting function'
+def plot_output(train, all_output, permutation):
+    plt.figure(figsize=(3,3))
+    plt.scatter(train[permutation][:,0], train[permutation][:,1], c = all_output)

@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt
-from matplotlib import colors
-
 import torch
 from torch import FloatTensor, LongTensor
 import math
@@ -26,14 +23,15 @@ layers = [
 loss_function = LossMSE()
 network = Sequential(layers, loss_function)
 
-# Initial learning rate and decay rate
+# Initial learning rate and decay rate and optimizer
 learning_rate = 2e-2
 decay_rate = 0.98
-
 optimizer=OptimSGD(network, learning_rate, decay_rate)
+
 
 num_epochs = 500
 mini_batch_size = 10
+
 
 for epoch in range(num_epochs):
     
@@ -53,14 +51,19 @@ for epoch in range(num_epochs):
         # Forward pass
         loss, output = network(train_element, target_element)
 
-        # Backward pass, gradient step and reinitalize gradient
+        # Backward pass, gradient step and reinitialize gradient
         network.backward()
 
         optimizer.step()
         optimizer.zero_grad_()
-
+    
+    # Multiply learning rate by decay rate
     optimizer.learning_rate_decay_step()
+
+
 
 # Compute train and test errors
 compute_error(network, train, target_train, data_type='Train')
 compute_error(network, test, target_test, data_type='Test')
+
+
