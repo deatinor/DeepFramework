@@ -37,7 +37,7 @@ class Linear(Module):
         self._input = input.view(-1, self._input_dimension)
 
         # Append '1' to input to be multiplied to bias term
-        self._input = torch.cat((self._input, torch.Tensor(self._input.shape[0]).fill_(1)), dim=1)
+        self._input = torch.cat((self._input, torch.Tensor(self._input.shape[0],1).fill_(1)), dim=1)
 
         self._output = self._input.mm(self._weights.t())
         
