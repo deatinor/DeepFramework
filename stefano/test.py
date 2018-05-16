@@ -29,7 +29,7 @@ decay_rate = 0.98
 optimizer=OptimSGD(network, learning_rate, decay_rate)
 
 
-num_epochs = 500
+num_epochs = 200
 mini_batch_size = 10
 
 
