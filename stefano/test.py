@@ -49,7 +49,8 @@ for epoch in range(num_epochs):
         train_element, target_element = batch
         
         # Forward pass
-        loss, output = network(train_element, target_element)
+        output = network(train_element)
+        loss = loss_function(output,target_element)
 
         # Backward pass, gradient step and reinitialize gradient
         network.backward()

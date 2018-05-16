@@ -143,17 +143,13 @@ class Sequential(Module):
         self._modules = modules
         self._loss = loss
     
-    def forward(self, input, target):
+    def forward(self, input):
         
         y = input.clone()
         for module in self._modules:
             y = module(y)
         
-        output = y.clone()
-        
-        loss = self._loss(y, target)
-        
-        return loss, output
+        return y
     
     def backward(self):
         d_dy = self._loss.backward()
@@ -177,7 +173,7 @@ def compute_error(network, dataset, target, data_type='Train'):
     correct = 0
 
     # Forward pass
-    loss, output = network(dataset, target)
+    output = network(dataset)
 
     boolean_target = target[:,1] > target[:,0]
     boolean_output = output[:,1] > output[:,0]
@@ -186,7 +182,7 @@ def compute_error(network, dataset, target, data_type='Train'):
     correct += sum(boolean_output == boolean_target)
 
     correct = (1000-correct)/1000 * 100
-    print(data_type + ' error: {} %'.format(correct))
+    print(data_type + ' error: {0:.2f} %'.format(correct))
 
     return correct
 
