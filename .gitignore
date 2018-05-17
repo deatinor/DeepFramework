@@ -7,3 +7,4 @@ __pycac*
 *.pdf
 !dlc-miniproject-1*
 
+*.DS*

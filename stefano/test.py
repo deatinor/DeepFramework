@@ -30,7 +30,7 @@ optimizer=OptimSGD(network, learning_rate, decay_rate)
 
 
 num_epochs = 200
-mini_batch_size = 10
+mini_batch_size = 5
 
 
 for epoch in range(num_epochs):
